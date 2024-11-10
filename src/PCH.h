@@ -1,44 +1,35 @@
 #pragma once
 
-#include <new>
-void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags, const char* file, int line);
-void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName, int flags,
-	unsigned debugFlags, const char* file, int line);
-
 #pragma warning(push)
-#if defined(FALLOUT4)
-#	include "F4SE/F4SE.h"
-#	include "RE/Fallout.h"
-#	define SKSE F4SE
-#	define SKSEAPI F4SEAPI
-#	define SKSEPlugin_Load F4SEPlugin_Load
-#	define SKSEPlugin_Query F4SEPlugin_Query
-#else
-#	define SKSE_SUPPORT_XBYAK
-#	include "RE/Skyrim.h"
-#	include "SKSE/SKSE.h"
-#	include <xbyak/xbyak.h>
+#pragma warning(disable : 4200)
+#include "RE/Skyrim.h"
+#include "SKSE/SKSE.h"
+#ifdef SKSE_SUPPORT_XBYAK
+#include <xbyak/xbyak.h>
 #endif
-
-#ifdef NDEBUG
-#	include <spdlog/sinks/basic_file_sink.h>
-#else
-#	include <spdlog/sinks/msvc_sink.h>
-#endif
-
 #pragma warning(pop)
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <atomic>
+#include <unordered_map>
+#include <unordered_set>
 
-#include "SimpleMath.h"
+#pragma warning(push)
+#ifdef NDEBUG
+#include <spdlog/sinks/basic_file_sink.h>
+#else
+#include <spdlog/sinks/msvc_sink.h>
+#endif
+#pragma warning(pop)
+
+namespace logger = SKSE::log;
+namespace fs = std::filesystem;
+using namespace std::literals;
+
 #include <SimpleIni.h>
 #include <detours.h>
-#include <magic_enum.hpp>
-#include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
-using namespace std::literals;
+#define REL_ID(se, ae) REL::RelocationID(se, ae)
+#define REL_OF(se, ae, vr) REL::VariantOffset(se, ae, vr)
 
 namespace stl
 {
@@ -87,13 +78,6 @@ namespace stl
 	{
 		write_vfunc<F, 0, T>();
 	}
-}
-
-namespace logger = SKSE::log;
-
-namespace util
-{
-	using SKSE::stl::report_and_fail;
 }
 
 #define DLLEXPORT __declspec(dllexport)

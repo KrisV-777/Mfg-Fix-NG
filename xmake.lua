@@ -18,8 +18,7 @@ option_end()
 
 -- Dependencies & Includes
 -- https://github.com/xmake-io/xmake-repo/tree/dev
-add_requires("magic_enum", "nlohmann_json", "directxtk", "rapidcsv", "xbyak", "catch2", "simpleini")
-add_requires("spdlog", { configs = { header_only = false, wchar = true, std_format = true } })
+add_requires("simpleini")
 
 includes("lib/commonlibsse-ng")
 
@@ -47,7 +46,7 @@ elseif is_mode("release") then
     set_symbols("debug")
 end
 
-set_config("skse_xbyak", true)
+-- set_config("skse_xbyak", true)
 -- set_config("skyrim_se", true)
 -- set_config("skyrim_ae", true)
 -- set_config("skyrim_vr", true)
@@ -55,7 +54,7 @@ set_config("skse_xbyak", true)
 -- Target
 target(PROJECT_NAME)
     -- Dependencies
-    add_packages("magic_enum", "nlohmann_json", "directxtk", "rapidcsv", "xbyak", "catch2", "simpleini")
+    add_packages("simpleini")
     add_deps("detours")
     add_includedirs("lib/detours/src")
 
