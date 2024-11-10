@@ -7,7 +7,7 @@ PROJECT_NAME = "mfgfix"
 set_project(PROJECT_NAME)
 set_version("1.0.0")
 set_languages("cxx23")
-set_license("Apache-2.0")
+set_license("gplv3")
 set_warnings("allextra", "error")
 
 -- Options
