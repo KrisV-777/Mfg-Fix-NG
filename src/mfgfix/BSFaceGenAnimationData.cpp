@@ -30,8 +30,13 @@ namespace MfgFix
 	void BSFaceGenAnimationData::SetExpressionOverride(std::uint32_t a_idx, float a_value)
 	{
 		using func_t = decltype(&BSFaceGenAnimationData::SetExpressionOverride);
-		REL::Relocation<func_t> func(Offsets::BSFaceGenAnimationData::SetExpressionOverride);
-		func(this, a_idx, a_value);
+		if (REL::Module::IsVR()) {
+			REL::Relocation<func_t> func(REL::Offset(0x9869d0));
+			func(this, a_idx, a_value);
+		} else {
+			REL::Relocation<func_t> func(Offsets::BSFaceGenAnimationData::SetExpressionOverride);
+			func(this, a_idx, a_value);
+		}
 	}
 
 	void BSFaceGenAnimationData::ClearExpressionOverride()
@@ -64,11 +69,17 @@ namespace MfgFix
 		if (!dialogueData || (((dialogueData->refCount & 0x70000000) + 0xD0000000) & 0xEFFFFFFF) != 0) {
 			return;
 		}
+		if (REL::Module::IsVR()) {
+			REL::Relocation<bool(void*, float, float*)> sub_1FCD10{ REL::Offset(0x202120)};
 
-		REL::Relocation<bool(void*, float, float*)> sub_1FCD10{ RELOCATION_ID(16024, 16267) };
+			modifier1.timer += a_timeDelta;
+			sub_1FCD10(dialogueData->unk28, modifier1.timer, modifier1.values);
+		} else {
+			REL::Relocation<bool(void*, float, float*)> sub_1FCD10{ RELOCATION_ID(16024, 16267) };
 
-		modifier1.timer += a_timeDelta;
-		sub_1FCD10(dialogueData->unk28, modifier1.timer, modifier1.values);
+			modifier1.timer += a_timeDelta;
+			sub_1FCD10(dialogueData->unk28, modifier1.timer, modifier1.values);
+		}
 	}
 
 	void BSFaceGenAnimationData::DialoguePhonemesUpdate(float a_timeDelta)
@@ -77,10 +88,16 @@ namespace MfgFix
 			return;
 		}
 
-		REL::Relocation<bool(void*, float, float*)> sub_1FC9B0{ RELOCATION_ID(16023, 16266) };
-
-		phoneme1.timer += a_timeDelta;
-		sub_1FC9B0(dialogueData->unk28, phoneme1.timer, phoneme1.values);
+		if (REL::Module::IsVR()) {
+			REL::Relocation<bool(void*, float, float*)> sub_1FC9B0{ REL::Offset(0x201d80) };
+			phoneme1.timer += a_timeDelta;
+			sub_1FC9B0(dialogueData->unk28, phoneme1.timer, phoneme1.values);
+		} else {
+			REL::Relocation<bool(void*, float, float*)> sub_1FC9B0{ RELOCATION_ID(16023, 16266) };
+	
+			phoneme1.timer += a_timeDelta;
+			sub_1FC9B0(dialogueData->unk28, phoneme1.timer, phoneme1.values);
+		}
 	}
 	
 	void BSFaceGenAnimationData::CheckAndReleaseDialogueData()
@@ -98,6 +115,10 @@ namespace MfgFix
 		if (REL::Module::IsAE()) {
 			REL::Relocation<void(void*)> ReleaseDialogueData{ REL::ID(16318) };
 			ReleaseDialogueData(dialogueData);
+		} else if (REL::Module::IsVR()) {
+			uint64_t release_singleton=*(uint64_t*)REL::Offset(0x2f896e0).address();
+			REL::Relocation<void(uint64_t, void*)> ReleaseDialogueData{REL::Offset(0x205550)};
+			ReleaseDialogueData(release_singleton+0xd0,dialogueData);
 		} else {
 			REL::Relocation<void(void*, void*)> ReleaseDialogueData{ REL::ID(16077) };
 			REL::ID loc{ 514495 };
@@ -501,7 +522,13 @@ namespace MfgFix
 
 	void BSFaceGenAnimationData::Init()
 	{
-		auto KeyframesUpdateAddr = Offsets::BSFaceGenAnimationData::KeyframesUpdate.address();
+		uint64_t KeyframesUpdateAddr=0x0;
+
+		if (REL::Module::IsVR()) {
+			KeyframesUpdateAddr=REL::Offset(0x3d38b0).address();
+		} else {
+			KeyframesUpdateAddr = Offsets::BSFaceGenAnimationData::KeyframesUpdate.address();
+		}
 		auto KeyframesUpdateHookAddr = &KeyframesUpdateHook;
 
 		DetourTransactionBegin();
@@ -515,6 +542,11 @@ namespace MfgFix
 		}
 
 		// remove eyes update from UpdateDownwardPass, it was moved to KeyframesUpdate
-		REL::safe_write(Offsets::BSFaceGenNiNode::sub_3F1800.address() + 0x0139, static_cast<std::uint16_t>(0x47EB));
+		if (REL::Module::IsVR()) {
+			REL::safe_write(REL::Offset(0x3e8dc0).address()+ 0x0139, static_cast<std::uint16_t>(0x47EB));
+		} else {
+			REL::safe_write(Offsets::BSFaceGenNiNode::sub_3F1800.address() + 0x0139, static_cast<std::uint16_t>(0x47EB));
+		}
+		
 	}
 }

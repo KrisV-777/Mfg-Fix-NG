@@ -173,7 +173,14 @@ namespace MfgFix::ConsoleCommands
 
 	void Init()
 	{
-		ModifyFaceGenCommandAddr = Offsets::ModifyFaceGenCommand.address();
+		if (REL::Module::IsVR()) 
+		{
+			ModifyFaceGenCommandAddr = REL::Offset(0x32b450).address();
+		}
+		else 
+		{
+			ModifyFaceGenCommandAddr = Offsets::ModifyFaceGenCommand.address();
+		}
 
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
