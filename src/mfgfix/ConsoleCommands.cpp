@@ -93,7 +93,8 @@ namespace MfgFix::ConsoleCommands
 		}
 
 		for (std::uint32_t i = 0; i < keyframe->count; ++i) {
-			console->Print(fmt::format("{:2d}  {:3.0f}  {:s}", i, keyframe->values[i] * 100.0f, Keyframe::GetValueName(a_keyframeType, i)).c_str());
+			const auto msg = std::format("{:2d}  {:3.0f}  {:s}", i, keyframe->values[i] * 100.0f, Keyframe::GetValueName(a_keyframeType, i));
+			console->Print(msg.c_str());
 		}
 	}
 

@@ -112,7 +112,7 @@ namespace MfgFix
 	{
 		auto& settings = Settings::Get();
 
-		eyesBlinkingTimer = std::max(eyesBlinkingTimer - a_timeDelta, 0.0f);
+		eyesBlinkingTimer = max(eyesBlinkingTimer - a_timeDelta, 0.0f);
 		auto blinkValue = 0.0f;
 
 		switch (eyesBlinkingStage) {
@@ -184,7 +184,7 @@ namespace MfgFix
 	{
 		auto& settings = Settings::Get();
 
-		eyesOffsetTimer = std::max(eyesOffsetTimer - a_timeDelta, 0.0f);
+		eyesOffsetTimer = max(eyesOffsetTimer - a_timeDelta, 0.0f);
 
 		if (eyesOffsetTimer > 0.0f) {
 			return;
@@ -314,7 +314,7 @@ namespace MfgFix
 		// modifiers
 		{
 			auto merge = [](Keyframe& a_src, Keyframe& a_dst) {
-				auto count = std::min(a_src.count, a_dst.count);
+				auto count = min(a_src.count, a_dst.count);
 				for (std::uint32_t i = 0; i < count; ++i) {
 					if (a_src.values[i] != 0.0f) {
 						a_dst.values[i] = a_src.values[i];
@@ -346,7 +346,7 @@ namespace MfgFix
 		// phonemes
 		{
 			auto merge = [](Keyframe& a_src, Keyframe& a_dst) {
-				auto count = std::min(a_src.count, a_dst.count);
+				auto count = min(a_src.count, a_dst.count);
 				for (std::uint32_t i = 0; i < count; ++i) {
 					if (a_src.values[i] != 0.0f) {
 						a_dst.values[i] = a_src.values[i];
@@ -365,7 +365,7 @@ namespace MfgFix
 		// custom
 		{
 			auto merge = [](BSFaceGenKeyframeMultiple& a_src, BSFaceGenKeyframeMultiple& a_dst) {
-				auto count = std::min(a_src.count, a_dst.count);
+				auto count = min(a_src.count, a_dst.count);
 				for (std::uint32_t i = 0; i < count; ++i) {
 					if (a_src.values[i] != 0.0f) {
 						a_dst.values[i] = a_src.values[i];
@@ -388,7 +388,7 @@ namespace MfgFix
 		auto animationStep = a_timeDelta / speed;
 
 		auto animMerge = [animationStep](Keyframe& dialogue, Keyframe& modifier, Keyframe& result) {
-			auto count = std::min(std::max(dialogue.count, modifier.count), result.count);
+			auto count = min(max(dialogue.count, modifier.count), result.count);
 			for (std::uint32_t i = 0; i < count; ++i) {
 				if (i >= modifier.count || fabs(modifier.values[i]) < FLT_EPSILON && fabs(dialogue.values[i]) > FLT_EPSILON) {
 					result.values[i] = dialogue.values[i];

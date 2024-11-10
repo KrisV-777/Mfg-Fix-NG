@@ -31,6 +31,13 @@ void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "SimpleMath.h"
+#include <SimpleIni.h>
+#include <detours.h>
+#include <magic_enum.hpp>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 using namespace std::literals;
 
 namespace stl
@@ -83,30 +90,10 @@ namespace stl
 }
 
 namespace logger = SKSE::log;
-namespace WinAPI = SKSE::WinAPI;
 
 namespace util
 {
 	using SKSE::stl::report_and_fail;
 }
-
-#include "Plugin.h"
-
-#include <ClibUtil/distribution.hpp>
-#include <ClibUtil/editorID.hpp>
-#include <ClibUtil/numeric.hpp>
-#include <ClibUtil/rng.hpp>
-#include <ClibUtil/simpleINI.hpp>
-
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
-#include <magic_enum.hpp>
-
-#include "SimpleMath.h"
-
-#include <detours/detours.h>
-
-using uint = uint32_t;
 
 #define DLLEXPORT __declspec(dllexport)
