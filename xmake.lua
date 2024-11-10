@@ -115,8 +115,12 @@ target(PROJECT_NAME)
                 "-o=" .. script_output, 
                 "-f=" .. flags_file, 
                 "-optimize", "-all" })
-            os.cp(target:targetfile(), "dist/SKSE/Plugins")
-            os.cp(target:symbolfile(), "dist/SKSE/Plugins")
+            local plugin_folder = "dist/SKSE/Plugins"
+            if not os.isdir(plugin_folder) then
+                os.mkdir(plugin_folder)
+            end
+            os.cp(target:targetfile(), plugin_folder)
+            os.cp(target:symbolfile(), plugin_folder)
 
             if (is_mode("release")) then
                 local release_folder = path.join(os.projectdir(), ".release")
