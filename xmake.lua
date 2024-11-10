@@ -33,7 +33,7 @@ target("detours")
 target_end()
 
 -- policies
-set_policy("dist.requires_lock", true)
+set_policy("package.requires_lock", true)
 
 -- rules
 add_rules("mode.debug", "mode.release")
@@ -131,9 +131,8 @@ target(PROJECT_NAME)
             print("Warning: GamePath not defined. Skipping script compilation.")
         end
         if mod_folder and has_config("copy_to_papyrus") then
-            local project_folder = "MfgFix NG"
-            local SkyrimPath = path.join(mod_folder, project_folder, "SKSE/Plugins")
-            os.cp("dist/**", SkyrimPath)
+            local SkyrimPath = path.join(mod_folder, "MfgFix NG")
+            os.cp("dist/*", SkyrimPath)
         else
             print("Warning: SkyrimPath not defined. Skipping post-build copy.")
         end
