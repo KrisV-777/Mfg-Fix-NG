@@ -31,7 +31,7 @@ namespace MfgFix
 	{
 		using func_t = decltype(&BSFaceGenAnimationData::SetExpressionOverride);
 		if (REL::Module::IsVR()) {
-			REL::Relocation<func_t> func(REL::Offset(0x9869d0));
+			REL::Relocation<func_t> func(REL::Offset(0x3D3780));
 			func(this, a_idx, a_value);
 		} else {
 			REL::Relocation<func_t> func(Offsets::BSFaceGenAnimationData::SetExpressionOverride);
