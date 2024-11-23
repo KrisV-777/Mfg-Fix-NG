@@ -5,7 +5,7 @@ PROJECT_NAME = "mfgfix"
 
 -- Project
 set_project(PROJECT_NAME)
-set_version("1.0.0")
+set_version("1.0.1")
 set_languages("cxx23")
 set_license("gplv3")
 set_warnings("allextra", "error")
