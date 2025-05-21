@@ -21,8 +21,8 @@ Version independent implementation of [MfgFix by andrelo1](https://github.com/an
 
 ## Building
 ```
-git clone https://github.com/Scrabx3/NightmareNight-SKSE.git
-cd NightmareNight-SKSE
+git clone https://github.com/Scrabx3/Mfg-Fix-NG.git
+cd Mfg-Fix-NG
 git submodule update --init --recursive
 xmake f -m release [
 	--copy_to_papyrus=(y/n)		# create/update papyrus mod instance
