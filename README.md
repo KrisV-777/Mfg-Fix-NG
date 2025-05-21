@@ -11,6 +11,7 @@ Version independent implementation of [MfgFix by andrelo1](https://github.com/an
 	* You need to build from the alandtse/ng branch
 * Create Environment Variables:
   * `XSE_TES5_MODS_PATH`: Path to your MO2/Vortex `mods` folder
+  * `XSE_TES5_GAME_PATH`: Path to your SSE install directory
 
 ## User Requirements
 - [Address Library for SKSE](https://www.nexusmods.com/skyrimspecialedition/mods/32444)
