@@ -93,41 +93,37 @@ namespace MfgFix::MfgConsoleFunc
 			return false;
 		}
 
-		auto animData = reinterpret_cast<BSFaceGenAnimationData*>(a_actor->GetFaceGenAnimationData());
-
-		if (!animData) {
-			const auto base = a_actor->GetActorBase();
-			const std::string_view name = base ? base->GetFullName() : "<Unknown>";
-			logger::error("SetPhonemeModifierSmooth :: No animData found for actor {}", name);
-			return false;
-		}
-
-		ActorManager::SetSpeed(a_actor, a_speed);
-
-		RE::BSSpinLockGuard locker(animData->lock);
-
-		switch (a_mode) {
-		case Mode::Reset:
-			{
+		auto actorPtr = a_actor;
+		SKSE::GetTaskInterface()->AddUITask([actorPtr, a_mode, a_id, a_value, a_speed]() {
+			auto base = actorPtr->GetActorBase();
+			std::string_view name = base ? base->GetFullName() : "<Unknown>";
+			auto animData = reinterpret_cast<BSFaceGenAnimationData*>(actorPtr->GetFaceGenAnimationData());
+			if (!animData) {
+				logger::error("SetPhonemeModifierSmooth [UITask] :: No animData found for actor {}", name);
+				return;
+			}
+			ActorManager::SetSpeed(actorPtr, a_speed);
+			RE::BSSpinLockGuard locker(animData->lock);
+			switch (a_mode) {
+			case -1:
 				animData->ClearExpressionOverride();
 				animData->Reset(0.0f, true, true, true, false);
-				return true;
+				return;
+			case 0:
+				SetPhoneme(animData, a_id, a_value);
+				return;
+			case 1:
+				SetModifier(animData, a_id, a_value);
+				return;
+			case 2:
+				SetExpression(animData, a_id, a_value);
+				return;
+			default:
+				return;
 			}
-		case Mode::Phoneme:
-			{
-				return SetPhoneme(animData, a_id, a_value);
-			}
-		case Mode::Modifier:
-			{
-				return SetModifier(animData, a_id, a_value);
-			}
-		case Mode::ExpressionValue:
-			{
-				return SetExpression(animData, a_id, a_value);
-			}
-		}
+		});
 
-		return false;
+		return true;
 	}
 
 	bool SetPhonemeModifier(RE::StaticFunctionTag* a_tag, RE::Actor* a_actor, std::int32_t a_mode, std::uint32_t a_id, std::int32_t a_value)
@@ -182,65 +178,38 @@ namespace MfgFix::MfgConsoleFunc
 			return false;
 		}
 
-		auto animData = reinterpret_cast<BSFaceGenAnimationData*>(a_actor->GetFaceGenAnimationData());
-		if (!animData) {
-			const auto base = a_actor->GetActorBase();
-			const std::string_view name = base ? base->GetFullName() : "<Unknown>";
-			logger::error("ResetMFGSmooth :: No animData found for actor {}", name);
-			return false;
-		}
+		auto actorPtr = a_actor;
+		SKSE::GetTaskInterface()->AddUITask([actorPtr, a_mode, a_speed]() {
+			constexpr int kPhonemeCount = 16;
+			constexpr int kModifierCount = 14;
 
-		// Set animation speed based on passed parameter
-		ActorManager::SetSpeed(a_actor, a_speed);
+			auto base = actorPtr->GetActorBase();
+			std::string_view name = base ? base->GetFullName() : "<Unknown>";
+			auto animData = reinterpret_cast<BSFaceGenAnimationData*>(actorPtr->GetFaceGenAnimationData());
+			if (!animData) {
+				logger::error("ResetMFGSmooth [UITask] :: No animData found for actor {}", name);
+				return;
+			}
+			ActorManager::SetSpeed(actorPtr, a_speed);
+			RE::BSSpinLockGuard locker(animData->lock);
 
-		// Ensure thread-safe access to facegen animation data
-		RE::BSSpinLockGuard locker(animData->lock);
-
-		// Constants based on expression array spec
-		constexpr int kPhonemeCount = 16;		// Indices 0-15
-		constexpr int kModifierCount = 14;	// Indices 16-29 map to 0-13 internally
-
-		switch (a_mode) {
-		case Mode::Reset:
-			{
-				// Reset all modifiers (blinks, brows, eye movement, squints)
-				for (int m = 0; m < kModifierCount; ++m) {
-					SetModifier(animData, m, 0);
-				}
-
-				// Reset all phonemes (mouth shape articulators)
-				for (int p = 0; p < kPhonemeCount; ++p) {
-					SetPhoneme(animData, p, 0);
-				}
-
-				// Reset the currently active expression preset
+			switch (a_mode) {
+			case -1:
+				for (int m = 0; m < kModifierCount; ++m) SetModifier(animData, m, 0);
+				for (int p = 0; p < kPhonemeCount; ++p) SetPhoneme(animData, p, 0);
 				SetExpression(animData, GetActiveExpression(*animData), 0);
 				break;
-			}
-		case Mode::Phoneme:
-			{
-				// Reset only phonemes (mouth articulation)
-				for (int p = 0; p < kPhonemeCount; ++p) {
-					SetPhoneme(animData, p, 0);
-				}
+			case 0:
+				for (int p = 0; p < kPhonemeCount; ++p) SetPhoneme(animData, p, 0);
 				break;
-			}
-		case Mode::Modifier:
-			{
-				// Reset only facial modifiers (excluding mouth)
-				for (int m = 0; m < kModifierCount; ++m) {
-					SetModifier(animData, m, 0);
-				}
+			case 1:
+				for (int m = 0; m < kModifierCount; ++m) SetModifier(animData, m, 0);
 				break;
-			}
-		default:
-			{
-				// Invalid mode was passed - log a warning
+			default:
 				logger::warn("ResetMFGSmooth: unexpected mode value {}", a_mode);
 				break;
 			}
-		}
-
+		});
 		return true;
 	}
 
@@ -276,67 +245,61 @@ namespace MfgFix::MfgConsoleFunc
 			return false;
 		}
 
-	    constexpr size_t kExpectedSize = 32;
-
+		constexpr size_t kExpectedSize = 32;
 		if (a_expression.size() != kExpectedSize) {
 			logger::error("ApplyExpressionPreset :: Expression vector incorrect size: {}, expected: {}", a_expression.size(), kExpectedSize);
 			return false;
 		}
 
-		const auto base = a_actor->GetActorBase();
-		const std::string_view name = base ? base->GetFullName() : "<Unknown>";
-
-		//LogExpressionVector(a_expression, name);
-
-		auto animData = reinterpret_cast<BSFaceGenAnimationData*>(a_actor->GetFaceGenAnimationData());
-		if (!animData) {
-			logger::error("ApplyExpressionPreset :: No animData found for actor {}", name);
-			return false;
-		}
-
-		constexpr int kExprNumIndex = 30;
-		constexpr int kExprStrengthIndex = 31;
-
-		const int exprNum = static_cast<int>(a_expression[kExprNumIndex]);
-		int exprStrResult = static_cast<int>(std::round(a_expression[kExprStrengthIndex] * 100.0f * exprStrModifier));
-
-		// Apply default expression strength if none specified
+		// Extract key values outside the task for safety
+		const auto exprNum = static_cast<int>(a_expression[30]);
+		int exprStrResult = static_cast<int>(std::round(a_expression[31] * 100.0f * exprStrModifier));
 		if (exprNum > 0 && exprStrResult == 0) {
 			exprStrResult = exprPower;
 		}
 
-		ActorManager::SetSpeed(a_actor, a_speed);
-		RE::BSSpinLockGuard locker(animData->lock);
+		// Copy by value for safe lambda capture
+		auto expressionCopy = a_expression;
+		auto actorPtr = a_actor;
 
-		 // Apply expression
-		//logger::info("ApplyExpressionPreset::SetExpression:id {}, value {}, actor {}", exprNum, exprStrResult, name);
-		SetExpression(animData, exprNum, exprStrResult);
+		// Schedule a safe, thread-aware update
+		SKSE::GetTaskInterface()->AddUITask([actorPtr, expressionCopy, a_openMouth, exprNum, exprStrResult, modStrModifier, phStrModifier, a_speed]() {
+			auto base = actorPtr->GetActorBase();
+			std::string_view name = base ? base->GetFullName() : "<Unknown>";
 
-		// Skip phoneme application if mouth is open
-		if (!a_openMouth) {
-			for (int i = 0; i <= 15; ++i) {
-				int currentVal = GetPhoneme(*animData, i);
-				int targetIntVal = static_cast<int>(std::round(a_expression[i] * 100.0f * phStrModifier));
-				if (currentVal != targetIntVal) {
-					//logger::info("ApplyExpressionPreset::SetPhoneme:id {}, value {}, actor {}", i, targetIntVal, name);
-					SetPhoneme(animData, i, targetIntVal);
+			auto animData = reinterpret_cast<BSFaceGenAnimationData*>(actorPtr->GetFaceGenAnimationData());
+			if (!animData) {
+				logger::error("ApplyExpressionPreset [UITask] :: No animData found for actor {}", name);
+				return;
+			}
+
+			ActorManager::SetSpeed(actorPtr, a_speed);
+			RE::BSSpinLockGuard locker(animData->lock);
+
+			SetExpression(animData, exprNum, exprStrResult);
+
+			if (!a_openMouth) {
+				for (int i = 0; i <= 15; ++i) {
+					int currentVal = GetPhoneme(*animData, i);
+					int targetIntVal = static_cast<int>(std::round(expressionCopy[i] * 100.0f * phStrModifier));
+					if (currentVal != targetIntVal) {
+						SetPhoneme(animData, i, targetIntVal);
+					}
 				}
 			}
-		}
 
-		// Apply modifiers [16-29]
-		for (int i = 16, m = 0; i <= 29; ++i, ++m) {
-			int currentVal = GetModifier(*animData, m);
-			int targetIntVal = static_cast<int>(std::round(a_expression[i] * 100.0f * modStrModifier));
-
-			if (currentVal != targetIntVal) {
-				//logger::info("ApplyExpressionPreset::SetModifier:id {},value {}, actor {}", m, targetIntVal, name);
-				SetModifier(animData, m, targetIntVal);
+			for (int i = 16, m = 0; i <= 29; ++i, ++m) {
+				int currentVal = GetModifier(*animData, m);
+				int targetIntVal = static_cast<int>(std::round(expressionCopy[i] * 100.0f * modStrModifier));
+				if (currentVal != targetIntVal) {
+					SetModifier(animData, m, targetIntVal);
+				}
 			}
-		}
+		});
 
 		return true;
 	}
+
 
 	
 
