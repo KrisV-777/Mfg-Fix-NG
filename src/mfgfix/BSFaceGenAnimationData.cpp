@@ -482,9 +482,9 @@ namespace MfgFix
 				}
 
 				if ((eyesPitch + modifierPitchOffset) > eyesPitchMax) {
-					eyesPitch = eyesHeadingMax - modifierPitchOffset;
+					eyesPitch = eyesPitchMax - modifierPitchOffset;
 				} else if ((eyesPitch + modifierPitchOffset) < -eyesPitchMax) {
-					eyesPitch = -eyesHeadingMax - modifierPitchOffset;
+					eyesPitch = -eyesPitchMax - modifierPitchOffset;
 				}
 
 				float currentHeading = eyesHeading + modifierHeadingOffset;

@@ -198,6 +198,8 @@ namespace MfgFix::MfgConsoleFunc
 				for (int m = 0; m < kModifierCount; ++m) SetModifier(animData, m, 0);
 				for (int p = 0; p < kPhonemeCount; ++p) SetPhoneme(animData, p, 0);
 				SetExpression(animData, GetActiveExpression(*animData), 0);
+				animData->ClearExpressionOverride();
+				animData->Reset(0.0f, true, true, true, false);
 				break;
 			case 0:
 				for (int p = 0; p < kPhonemeCount; ++p) SetPhoneme(animData, p, 0);
