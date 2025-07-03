@@ -380,7 +380,19 @@ namespace MfgFix
 			DialoguePhonemesUpdate(a_timeDelta);
 
 			merge(phoneme1, phoneme3);
-			merge(phoneme2, phoneme3);
+			if (dialogueData) {
+				auto threshold = Settings::Get().dialogue.fDialoguePhonemeThreshold;
+				auto count = min(phoneme2.count, phoneme3.count);
+				for (std::uint32_t i = 0; i < count; ++i) {
+					if (phoneme2.values[i] >= threshold) {
+						phoneme3.values[i] = phoneme2.values[i];
+					} else {
+						phoneme2.values[i] = 0.0f;
+					}
+				}
+			} else {
+				merge(phoneme2, phoneme3);
+			}
 		}
 
 		// custom
@@ -500,7 +512,17 @@ namespace MfgFix
 		DialoguePhonemesUpdate(a_timeDelta);
 
 		// phonemes
-		animMerge(phoneme1, phoneme2, phoneme3);
+		if (dialogueData) {
+			auto threshold = Settings::Get().dialogue.fDialoguePhonemeThreshold;
+			for (std::uint32_t i = 0; i < phoneme2.count; ++i) {
+				if (phoneme2.values[i] < threshold) {
+					phoneme2.values[i] = 0.0f;
+				}
+			}
+			animMerge(phoneme1, phoneme2, phoneme3);
+		} else {
+			animMerge(phoneme1, phoneme2, phoneme3);
+		}
 		// custom
 		animMerge(custom1, custom2, custom3);
 	}

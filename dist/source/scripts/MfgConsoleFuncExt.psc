@@ -85,7 +85,7 @@ Scriptname MfgConsoleFuncExt Hidden
 ;        =Arguments=
 ;akActor            = actor to process
 ;apExpression       = raw expression construct.
-;abOpenMouth        = if true, will skip phonems
+;abOpenMouth        = if true, will skip phonemes
 ;exprPower          = used if expression is set but expr value is 0 in the preset (dynamic expr strength). 0 to ignore
 ;exprStrModifier, modStrModifier,  phStrModifier= values will be miltiplied by those (capped by 200)
 ;speed              = anim speed. 0.1 is close to instant. 0.75 is recomended for smooth transitions 
@@ -116,6 +116,9 @@ bool function SetPhonemeModifierSmooth(Actor act, int mode, int id, int value, f
 
 ; Get PC dialogue target
 Actor Function GetPlayerSpeechTarget() global native
+
+;Works for NPCs and Player for regular dialogues and chatter also like greetings and bumps. Using dialoguedata object
+bool Function IsInDialogue(Actor akActor) global native
 
 ; wrapper functions
 
