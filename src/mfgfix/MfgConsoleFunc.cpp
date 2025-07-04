@@ -1,6 +1,7 @@
 ﻿#include "MfgConsoleFunc.h"
 #include "BSFaceGenAnimationData.h"
 #include "ActorManager.h"
+#include "Settings.h"
 
 namespace MfgFix::MfgConsoleFunc
 {
@@ -14,6 +15,16 @@ namespace MfgFix::MfgConsoleFunc
 			ExpressionValue,
 			ExpressionId
 		};
+
+		static bool IsInDialogue(RE::Actor* a_actor)
+		{
+			if (!a_actor) {
+				return false;
+			}
+
+			auto animData = reinterpret_cast<BSFaceGenAnimationData*>(a_actor->GetFaceGenAnimationData());
+			return animData && animData->dialogueData;
+		}
 	}
 
 	inline bool SetPhoneme(BSFaceGenAnimationData* animData, std::uint32_t a_id, std::int32_t a_value)
@@ -325,6 +336,11 @@ namespace MfgFix::MfgConsoleFunc
 		return nullptr;
 	}
 
+	bool IsInDialoguePapyrus(RE::StaticFunctionTag*, RE::Actor* a_actor)
+	{
+		return IsInDialogue(a_actor);
+	}
+
 
 
 	void Register()
@@ -336,7 +352,7 @@ namespace MfgFix::MfgConsoleFunc
 			a_vm->RegisterFunction("ResetMFGSmooth", "MfgConsoleFuncExt", ResetMFGSmooth);
 			a_vm->RegisterFunction("ApplyExpressionPreset", "MfgConsoleFuncExt", ApplyExpressionPreset);
 			a_vm->RegisterFunction("GetPlayerSpeechTarget", "MfgConsoleFuncExt", GetPlayerSpeechTarget);
-
+			a_vm->RegisterFunction("IsInDialogue", "MfgConsoleFuncExt", IsInDialoguePapyrus);
 			return true;
 		});
 	}

@@ -84,6 +84,11 @@ namespace MfgFix
 			float	fEyeOffsetDelayMaxEmotionCombatShout{ 3.0f };
 		};
 
+		struct Dialogue
+		{
+			float fDialoguePhonemeThreshold{ 50.0f };
+		};
+
 		static Settings&	Get();
 
 		void	Read();
@@ -92,5 +97,7 @@ namespace MfgFix
 		Transition		transition;
 		EyesBlinking	eyesBlinking;
 		EyesMovement	eyesMovement;
+		Dialogue dialogue;
+
 	};
 }

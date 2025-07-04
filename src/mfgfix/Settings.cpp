@@ -106,6 +106,7 @@ namespace MfgFix
 		eyesMovement.fEyePitchMaxOffsetEmotionCombatShout = static_cast<float>(ini.GetDoubleValue("EyesMovement", "fEyePitchMaxOffsetEmotionCombatShout", eyesMovement.fEyePitchMaxOffsetEmotionCombatShout));
 		eyesMovement.fEyeOffsetDelayMinEmotionCombatShout = static_cast<float>(ini.GetDoubleValue("EyesMovement", "fEyeOffsetDelayMinEmotionCombatShout", eyesMovement.fEyeOffsetDelayMinEmotionCombatShout));
 		eyesMovement.fEyeOffsetDelayMaxEmotionCombatShout = static_cast<float>(ini.GetDoubleValue("EyesMovement", "fEyeOffsetDelayMaxEmotionCombatShout", eyesMovement.fEyeOffsetDelayMaxEmotionCombatShout));
+		dialogue.fDialoguePhonemeThreshold = static_cast<float>(ini.GetDoubleValue("Dialogue", "fDialoguePhonemeThreshold", dialogue.fDialoguePhonemeThreshold));
 	}
 
 	void Settings::Write()
@@ -185,7 +186,7 @@ namespace MfgFix
 		ini.SetDoubleValue("EyesMovement", "fEyePitchMaxOffsetEmotionCombatShout", eyesMovement.fEyePitchMaxOffsetEmotionCombatShout);
 		ini.SetDoubleValue("EyesMovement", "fEyeOffsetDelayMinEmotionCombatShout", eyesMovement.fEyeOffsetDelayMinEmotionCombatShout);
 		ini.SetDoubleValue("EyesMovement", "fEyeOffsetDelayMaxEmotionCombatShout", eyesMovement.fEyeOffsetDelayMaxEmotionCombatShout);
-
+		ini.SetDoubleValue("Dialogue", "fDialoguePhonemeThreshold", dialogue.fDialoguePhonemeThreshold);
 		ini.SaveFile(path.c_str());
 	}
 }
