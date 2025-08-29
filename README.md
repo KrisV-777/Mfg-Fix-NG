@@ -21,7 +21,7 @@ Version independent implementation of [MfgFix by andrelo1](https://github.com/an
 
 ## Building
 ```
-git clone https://github.com/Scrabx3/Mfg-Fix-NG.git
+git clone https://github.com/KrisV-777/Mfg-Fix-NG.git
 cd Mfg-Fix-NG
 git submodule update --init --recursive
 xmake f -m release [
