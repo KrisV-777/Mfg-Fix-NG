@@ -2,5 +2,5 @@
 
 namespace MfgFix::MfgConsoleFunc
 {
-  void Register();
+    void Register();
 }

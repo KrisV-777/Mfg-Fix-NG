@@ -2,5 +2,5 @@
 
 namespace MfgFix
 {
-  void Init();
+    void Init();
 }

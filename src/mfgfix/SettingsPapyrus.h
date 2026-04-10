@@ -2,5 +2,5 @@
 
 namespace MfgFix::SettingsPapyrus
 {
-  void Register();
+    void Register();
 }
