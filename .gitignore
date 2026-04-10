@@ -1,5 +1,5 @@
 .vs
-.vscode
+!.vscode/c_cpp_properties.json
 *.code-workspace
 build/
 /vcpkg_installed
