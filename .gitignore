@@ -1,4 +1,5 @@
 .vs
+.vscode/*
 !.vscode/c_cpp_properties.json
 *.code-workspace
 build/
@@ -17,3 +18,4 @@ dist/SKSE/Plugins/*.pdb
 *.lock
 *.lock
 CppProperties.json
+*.env
