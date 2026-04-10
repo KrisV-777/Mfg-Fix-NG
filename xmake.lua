@@ -62,7 +62,7 @@ target(PROJECT_NAME)
     add_deps("commonlibsse-ng")
     add_rules("commonlibsse-ng.plugin", {
         name = PROJECT_NAME,
-        author = "Scrab Joséline",
+        author = "KrisV-777, crajjjj",
         description = "Extended implementation of Mfg Fix with new functions and animated expression transitions."
     })
 
