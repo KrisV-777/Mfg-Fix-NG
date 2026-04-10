@@ -462,10 +462,10 @@ namespace MfgFix
 			EyesBlinkingUpdate(a_timeDelta, false);
 
 			if (!unk21A) {
-				modifier3.values[Modifier::LookLeft] += eyesHeading < 0.0f ? -eyesHeading / eyesHeadingMax : 0.0f;
-				modifier3.values[Modifier::LookRight] += eyesHeading > 0.0f ? eyesHeading / eyesHeadingMax : 0.0f;
-				modifier3.values[Modifier::LookDown] += eyesPitch < 0.0f ? -eyesPitch / eyesPitchMax : 0.0f;
-				modifier3.values[Modifier::LookUp] += eyesPitch > 0.0f ? eyesPitch / eyesPitchMax : 0.0f;
+				modifier3.values[Modifier::LookLeft] -= eyesHeading < 0.0f ? -eyesHeading / eyesHeadingMax : 0.0f;
+				modifier3.values[Modifier::LookRight] -= eyesHeading > 0.0f ? eyesHeading / eyesHeadingMax : 0.0f;
+				modifier3.values[Modifier::LookDown] -= eyesPitch < 0.0f ? -eyesPitch / eyesPitchMax : 0.0f;
+				modifier3.values[Modifier::LookUp] -= eyesPitch > 0.0f ? eyesPitch / eyesPitchMax : 0.0f;
 
 				EyesMovementUpdate(a_timeDelta);
 			}
