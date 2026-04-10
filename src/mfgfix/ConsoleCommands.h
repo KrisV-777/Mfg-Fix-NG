@@ -3,5 +3,5 @@
 
 namespace MfgFix::ConsoleCommands
 {
-	void Init();
+  void Init();
 }
