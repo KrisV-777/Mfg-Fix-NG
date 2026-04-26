@@ -3,6 +3,8 @@
 
 namespace MfgFix
 {
+    class BSFaceGenAnimationData;
+
     class ActorManager
     {
       public:

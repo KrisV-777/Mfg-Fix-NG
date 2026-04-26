@@ -108,8 +108,8 @@ bool function ResetMFGSmooth(Actor akActor, int mode, float speed) native global
 ;akActor            = actor to process
 ;mode        		=  Reset= -1,Phoneme= 0,Modifier= 1,ExpressionValue = 2,
 ;id                 = phoneme or modifier or mood id
-;value              = phoneme or modifier or expression strength
-;speed              = anim speed. 0.1 is close to instant. 0.75 is recomended for smooth transitions 
+;value              = phoneme or modifier or expression strength [ 0 , 200 ] — 0 to 100 is the normal range; 101-200 is allowed and may produce exaggerated morphs.
+;speed              = anim speed. 0.1 is close to instant. 0.75 is recomended for smooth transitions
 ;        =Return value=
 ;Return true if successfully applied
 bool function SetPhonemeModifierSmooth(Actor act, int mode, int id, int value, float speed) native global
