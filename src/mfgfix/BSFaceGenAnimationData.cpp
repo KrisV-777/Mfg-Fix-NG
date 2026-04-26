@@ -186,11 +186,6 @@ namespace MfgFix
             {
                 if (unk21A) {
                     blinkValue = settings.eyesBlinking.fBlinkDownTime != 0.0f ? 1.0f - eyesBlinkingTimer / settings.eyesBlinking.fBlinkDownTime : 1.0f;
-
-                    if (eyesBlinkingTimer == 0.0f) {
-                        eyesBlinkingStage = EyesBlinkingStage::BlinkUp;
-                        eyesBlinkingTimer = settings.eyesBlinking.fBlinkUpTime;
-                    }
                 } else {
                     blinkValue = 1.0f;
                     eyesBlinkingStage = EyesBlinkingStage::BlinkUp;
