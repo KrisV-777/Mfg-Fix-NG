@@ -1,6 +1,8 @@
 Scriptname MfgConsoleFunc Hidden
 
-; native functions, wrapper base. these have magic number for select some parameter.
+; Native functions. mode: -1=reset, 0=phoneme, 1=modifier, 2=expression value, 3=expression id (get only).
+; value: [ 0 , 200 ] — 0 to 100 is the normal range; 101-200 is allowed and may produce exaggerated morphs.
+; GetPhonemeModifier returns the current value in 0-100 scale, or -1 on error.
 bool function SetPhonemeModifier(Actor act, int mode, int id, int value) native global
 int function GetPhonemeModifier(Actor act, int mode, int id) native global
 
