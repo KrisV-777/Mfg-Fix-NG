@@ -69,15 +69,20 @@ namespace MfgFix
         if (!dialogueData || (((dialogueData->refCount & 0x70000000) + 0xD0000000) & 0xEFFFFFFF) != 0) {
             return;
         }
+
+        modifier1.timer += a_timeDelta;
+
+        auto animEnd = (dialogueData->unk28->unk0 + (dialogueData->unk28->unk4 < 0 ? -dialogueData->unk28->unk4 : 0)) * 0.033f;
+        if (modifier1.timer > animEnd) {
+            modifier1.Reset();
+            return;
+        }
+
         if (REL::Module::IsVR()) {
             REL::Relocation<bool(void*, float, float*)> sub_1FCD10{ REL::Offset(0x202120) };
-
-            modifier1.timer += a_timeDelta;
             sub_1FCD10(dialogueData->unk28, modifier1.timer, modifier1.values);
         } else {
             REL::Relocation<bool(void*, float, float*)> sub_1FCD10{ RELOCATION_ID(16024, 16267) };
-
-            modifier1.timer += a_timeDelta;
             sub_1FCD10(dialogueData->unk28, modifier1.timer, modifier1.values);
         }
     }
@@ -88,14 +93,19 @@ namespace MfgFix
             return;
         }
 
+        phoneme1.timer += a_timeDelta;
+
+        auto animEnd = (dialogueData->unk28->unk0 + (dialogueData->unk28->unk4 < 0 ? -dialogueData->unk28->unk4 : 0)) * 0.033f;
+        if (phoneme1.timer > animEnd) {
+            phoneme1.Reset();
+            return;
+        }
+
         if (REL::Module::IsVR()) {
             REL::Relocation<bool(void*, float, float*)> sub_1FC9B0{ REL::Offset(0x201d80) };
-            phoneme1.timer += a_timeDelta;
             sub_1FC9B0(dialogueData->unk28, phoneme1.timer, phoneme1.values);
         } else {
             REL::Relocation<bool(void*, float, float*)> sub_1FC9B0{ RELOCATION_ID(16023, 16266) };
-
-            phoneme1.timer += a_timeDelta;
             sub_1FC9B0(dialogueData->unk28, phoneme1.timer, phoneme1.values);
         }
     }
@@ -126,6 +136,8 @@ namespace MfgFix
             ReleaseDialogueData((void*)(loc.address() + 0x100), dialogueData);
         }
 
+        modifier1.Reset();
+        phoneme1.Reset();
         dialogueData = nullptr;
     }
 
@@ -174,6 +186,11 @@ namespace MfgFix
             {
                 if (unk21A) {
                     blinkValue = settings.eyesBlinking.fBlinkDownTime != 0.0f ? 1.0f - eyesBlinkingTimer / settings.eyesBlinking.fBlinkDownTime : 1.0f;
+
+                    if (eyesBlinkingTimer == 0.0f) {
+                        eyesBlinkingStage = EyesBlinkingStage::BlinkUp;
+                        eyesBlinkingTimer = settings.eyesBlinking.fBlinkUpTime;
+                    }
                 } else {
                     blinkValue = 1.0f;
                     eyesBlinkingStage = EyesBlinkingStage::BlinkUp;
@@ -439,7 +456,7 @@ namespace MfgFix
         auto animMerge = [animationStep](Keyframe& dialogue, Keyframe& modifier, Keyframe& result) {
             auto count = min(max(dialogue.count, modifier.count), result.count);
             for (std::uint32_t i = 0; i < count; ++i) {
-                if (i >= modifier.count || fabs(modifier.values[i]) < FLT_EPSILON && fabs(dialogue.values[i]) > FLT_EPSILON) {
+                if (i >= modifier.count || (fabs(modifier.values[i]) < FLT_EPSILON && fabs(dialogue.values[i]) > FLT_EPSILON)) {
                     result.values[i] = dialogue.values[i];
                 } else if (fabs(result.values[i] - modifier.values[i]) < animationStep) {
                     result.values[i] = modifier.values[i];
