@@ -28,8 +28,6 @@ src/
   mfgfix/
     mfgfixinit.cpp/.h               Init orchestrator: hooks, patches, registration
     BSFaceGenAnimationData.cpp/.h    Core: animation update hook, transitions, blinking, eye movement
-    BSFaceGenKeyframe.h              Abstract keyframe base class
-    BSFaceGenKeyframeMultiple.cpp/.h Keyframe impl (float arrays for expressions/modifiers/phonemes)
     Settings.cpp/.h                  INI config singleton (transition speed, blink timing, eye movement)
     SettingsPapyrus.cpp/.h           Papyrus bindings for settings read/write
     ConsoleCommands.cpp/.h           Console SetValue/PrintInfo for keyframe manipulation

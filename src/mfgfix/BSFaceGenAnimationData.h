@@ -1,13 +1,11 @@
 #pragma once
 
-#include "BSFaceGenKeyframeMultiple.h"
-
 namespace MfgFix
 {
     class BSFaceGenAnimationData : public RE::NiExtraData
     {
       public:
-        using Keyframe = BSFaceGenKeyframeMultiple;
+        using Keyframe = RE::BSFaceGenKeyframeMultiple;
         using Expression = Keyframe::Expression;
         using Phoneme = Keyframe::Phoneme;
         using Modifier = Keyframe::Modifier;

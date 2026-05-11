@@ -425,7 +425,7 @@ namespace MfgFix
 
         // custom
         {
-            auto merge = [](BSFaceGenKeyframeMultiple& a_src, BSFaceGenKeyframeMultiple& a_dst) {
+            auto merge = [](RE::BSFaceGenKeyframeMultiple& a_src, RE::BSFaceGenKeyframeMultiple& a_dst) {
                 auto count = min(a_src.count, a_dst.count);
                 for (std::uint32_t i = 0; i < count; ++i) {
                     if (a_src.values[i] != 0.0f) {
