@@ -2,7 +2,7 @@ set_xmakever("2.9.5")
 
 -- Globals
 PROJECT_NAME = "mfgfix"
-PROJECT_VERSION = "1.0.7"
+PROJECT_VERSION = "1.0.9"
 
 -- Project
 set_project(PROJECT_NAME)
