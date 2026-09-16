@@ -79,4 +79,3 @@ namespace stl
         write_vfunc<F, 0, T>();
     }
 }
-
