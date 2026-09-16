@@ -145,7 +145,7 @@ namespace MfgFix
     {
         auto& settings = Settings::Get();
 
-        eyesBlinkingTimer = max(eyesBlinkingTimer - a_timeDelta, 0.0f);
+        eyesBlinkingTimer = std::max(eyesBlinkingTimer - a_timeDelta, 0.0f);
         auto blinkValue = 0.0f;
 
         switch (eyesBlinkingStage) {
@@ -223,7 +223,7 @@ namespace MfgFix
     {
         auto& settings = Settings::Get();
 
-        eyesOffsetTimer = max(eyesOffsetTimer - a_timeDelta, 0.0f);
+        eyesOffsetTimer = std::max(eyesOffsetTimer - a_timeDelta, 0.0f);
 
         if (eyesOffsetTimer > 0.0f) {
             return;
@@ -363,7 +363,7 @@ namespace MfgFix
         // modifiers
         {
             auto merge = [](Keyframe& a_src, Keyframe& a_dst) {
-                auto count = min(a_src.count, a_dst.count);
+                auto count = std::min(a_src.count, a_dst.count);
                 for (std::uint32_t i = 0; i < count; ++i) {
                     if (a_src.values[i] != 0.0f) {
                         a_dst.values[i] = a_src.values[i];
@@ -395,7 +395,7 @@ namespace MfgFix
         // phonemes
         {
             auto merge = [](Keyframe& a_src, Keyframe& a_dst) {
-                auto count = min(a_src.count, a_dst.count);
+                auto count = std::min(a_src.count, a_dst.count);
                 for (std::uint32_t i = 0; i < count; ++i) {
                     if (a_src.values[i] != 0.0f) {
                         a_dst.values[i] = a_src.values[i];
@@ -410,7 +410,7 @@ namespace MfgFix
             merge(phoneme1, phoneme3);
             if (dialogueData) {
                 auto threshold = std::clamp(Settings::Get().dialogue.fDialoguePhonemeThreshold, 0.0f, 200.0f) / 100.0f;
-                auto count = min(phoneme2.count, phoneme3.count);
+                auto count = std::min(phoneme2.count, phoneme3.count);
                 for (std::uint32_t i = 0; i < count; ++i) {
                     if (phoneme2.values[i] >= threshold) {
                         phoneme3.values[i] = phoneme2.values[i];
@@ -426,7 +426,7 @@ namespace MfgFix
         // custom
         {
             auto merge = [](RE::BSFaceGenKeyframeMultiple& a_src, RE::BSFaceGenKeyframeMultiple& a_dst) {
-                auto count = min(a_src.count, a_dst.count);
+                auto count = std::min(a_src.count, a_dst.count);
                 for (std::uint32_t i = 0; i < count; ++i) {
                     if (a_src.values[i] != 0.0f) {
                         a_dst.values[i] = a_src.values[i];
@@ -449,7 +449,7 @@ namespace MfgFix
         auto animationStep = a_timeDelta / speed;
 
         auto animMerge = [animationStep](Keyframe& dialogue, Keyframe& modifier, Keyframe& result) {
-            auto count = min(max(dialogue.count, modifier.count), result.count);
+            auto count = std::min(std::max(dialogue.count, modifier.count), result.count);
             for (std::uint32_t i = 0; i < count; ++i) {
                 if (i >= modifier.count || (fabs(modifier.values[i]) < FLT_EPSILON && fabs(dialogue.values[i]) > FLT_EPSILON)) {
                     result.values[i] = dialogue.values[i];

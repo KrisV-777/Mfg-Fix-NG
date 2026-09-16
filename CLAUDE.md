@@ -5,7 +5,7 @@ Skyrim SE SKSE plugin: extended facial animation/expression system with smooth t
 ## Build
 
 ```sh
-# xmake 2.9.5+, MSVC v143 (VS 2022), C++23
+# xmake 3.0.0+, MSVC v143 (VS 2022), C++23
 # Env vars: XSE_TES5_GAME_PATH (SSE install), XSE_TES5_MODS_PATH (MO2 mods folder)
 git submodule update --init --recursive
 xmake f -m release && xmake        # -> dist/SKSE/Plugins/mfgfix.dll
@@ -15,7 +15,7 @@ Post-build compiles Papyrus scripts via `XSE_TES5_GAME_PATH/Papyrus Compiler/`, 
 
 ## Dependencies
 
-- CommonLibSSE-NG (submodule at `lib/commonlibsse-ng`)
+- CommonLibSSE-NG v8 (submodule at `lib/CommonLibSSE-NG`)
 - Microsoft Detours (submodule at `lib/detours`)
 - SimpleINI, DirectXTK (xmake packages)
 

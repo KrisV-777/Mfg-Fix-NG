@@ -80,4 +80,3 @@ namespace stl
     }
 }
 
-#define DLLEXPORT __declspec(dllexport)
