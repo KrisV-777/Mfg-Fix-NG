@@ -1,8 +1,8 @@
-set_xmakever("2.9.5")
+set_xmakever("3.0.0")  -- required by the commonlibsse-ng submodule
 
 -- Globals
 PROJECT_NAME = "mfgfix"
-PROJECT_VERSION = "1.0.9"
+PROJECT_VERSION = "1.0.10"
 
 -- Project
 set_project(PROJECT_NAME)
@@ -12,7 +12,6 @@ set_license("Apache-2.0")
 set_warnings("allextra", "error")
 
 -- Includes
-includes("lib/CommonLibSSE-NG/xmake.lua")
 includes("xmake/dotenv")
 includes("xmake/papyrus")
 add_moduledirs("xmake/modules")
@@ -75,6 +74,8 @@ option("rex_toml")
     set_showmenu(false)
 option("skse_xbyak")
     set_showmenu(false)
+option("skse_patch_safety")
+    set_showmenu(false)
 option("tests")
     set_showmenu(false)
 option_end()
@@ -83,7 +84,7 @@ option_end()
 -- https://github.com/xmake-io/xmake-repo/tree/dev
 add_requires("simpleini", "directxtk")
 
-includes("lib/commonlibsse-ng")
+includes("lib/CommonLibSSE-NG")
 
 -- policies
 set_policy("package.requires_lock", true)
@@ -100,6 +101,8 @@ elseif is_mode("release") then
     set_optimize("fastest")
     set_symbols("debug")
 end
+
+add_defines("NOMINMAX")  -- CommonLibSSE-NG v8 headers pull in Windows.h
 
 set_allowedplats("windows")
 set_allowedarchs("x64")
@@ -197,12 +200,16 @@ target(PROJECT_NAME)
     end
 
     on_load(function(target)
-        local clib = target:rule("commonlibsse-ng.plugin")
-        if clib then
-            -- disable unwanted events
-            clib:set("install", nil)
-            clib:set("package", nil)
-            clib:set("build_after", nil)
+        -- disable unwanted events; CommonLibSSE-NG v8 moved install/package/after_build
+        -- off "commonlibsse-ng.plugin" onto the "commonlib.plugin" rule it depends on,
+        -- so both names have to be cleared for the "common" rule above to own install.
+        for _, name in ipairs({ "commonlibsse-ng.plugin", "commonlib.plugin" }) do
+            local clib = target:rule(name)
+            if clib then
+                clib:set("install", nil)
+                clib:set("package", nil)
+                clib:set("build_after", nil)
+            end
         end
     end)
 

@@ -1,6 +1,6 @@
 [submodule "lib/CommonLibSSE-NG"]
 	path = lib/CommonLibSSE-NG
-	url = https://github.com/alandtse/CommonLibVR.git
+	url = https://github.com/alandtse/CommonLibSSE-NG.git
 [submodule "lib/Detours"]
 	path = lib/Detours
 	url = https://github.com/microsoft/Detours.git
